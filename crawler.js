@@ -24,25 +24,25 @@ puppeteer.launch({ headless: false }).then(async browser => {
     //Click New Releases
     await page.waitFor(2000);
     await page.click("#nav-subnav > a:nth-child(3)");
-
-    //Click first book
-    await page.waitFor(2000);
-    await page.click(
-      "#zg-ordered-list > li:nth-child(1) > span > div > span > a"
-    );
-
-    //Parse first book
-    await page.waitFor(2000);
-    const bodyHandle = await page.$("body");
-    const html = await page.evaluate(body => body.innerHTML, bodyHandle);
-    await parse(html);
-    await bodyHandle.dispose();
+    //50
+    for (let i = 0; i <= 5; i++) {
+      //5th is the only child thats not a book listing
+      if (i === 4) i++;
+      //Click book
+      await page.waitFor(2000);
+      await page.click(
+        `#zg-ordered-list > li:nth-child(${i + 1}) > span > div > span > a`
+      );
+      let url = page.url();
+      //Parse book
+      await page.waitFor(2000);
+      const bodyHandle = await page.$("body");
+      const html = await page.evaluate(body => body.innerHTML, bodyHandle);
+      await parse(html, url);
+      await bodyHandle.dispose();
+      page.goBack();
+    }
   } catch (err) {
     console.log(err);
   }
 });
-/*let parsed = 0
-let bookIdx = 0
-while (parsed <= 10) {
-
-}*/

@@ -1,11 +1,14 @@
 const cheerio = require("cheerio");
 
-const parse = body => {
+const parse = (body, url) => {
+  console.log(url);
   const $ = cheerio.load(body);
   let name = $("#productTitle").text();
   console.log(name);
   let id = 1;
-  let listPrice = $("#a-autoid-6-announce > span.a-color-base > span")
+  let listPrice = $(
+    "#sims-fbt-form > div.sims-fbt-rows > fieldset > ul > li:nth-child(1) > span > span > div > label > span > div > span.a-color-price > span"
+  )
     .text()
     .trim();
   console.log(listPrice);
@@ -26,12 +29,14 @@ const parse = body => {
     .text()
     .split(":")[1]
     .trim();
+
   console.log(product_dimension);
   let weight = $(product_details[1])
     .text()
     .split(":")[1]
-    .trim()
-    .split("(")[0];
+    .split("(")[0]
+    .trim();
+
   console.log(weight);
 
   let imgContainer = $("img", "#imgThumbs");

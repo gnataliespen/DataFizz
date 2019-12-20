@@ -6,16 +6,12 @@ module.exports = class Book {
       for (let key in book) {
         this[key] = book[key];
       }
-      Book.writeJson(book);
+      console.log("success");
     } else {
       console.log("Incomplete record");
       console.log(book);
     }
   }
-  static writeJson = book => {
-    console.log("success");
-    let json = JSON.stringify(book);
-  };
 
   static validate(book) {
     if (
@@ -25,8 +21,8 @@ module.exports = class Book {
       !book.productDimensions ||
       !book.imgURLs ||
       !book.weight ||
-      !book.sourceURL
-      //|| !book.description
+      !book.sourceURL ||
+      !book.description
     ) {
       return false;
     } else {

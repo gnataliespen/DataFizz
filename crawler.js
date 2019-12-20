@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 
-const parse = require("./parse");
-// Launch Puppeteer Library and Navigate Amazon Website
+const parser = require("./parser");
+// Launch Puppeteer and go to Amazons home page
 puppeteer.launch({ headless: false }).then(async browser => {
   // New Browser Tab and Amazon Web Page Navigation
   try {
@@ -24,19 +24,18 @@ puppeteer.launch({ headless: false }).then(async browser => {
     //Click New Releases
     await page.waitFor(2000);
     await page.click("#nav-subnav > a:nth-child(3)");
-    //50
-    for (let i = 0; i <= 1; i++) {
+    //Go through first page of new releases and parse each book listing
+    for (let i = 0; i <= 50; i++) {
       //5th is the only child thats not a book listing
-
       if (i === 4) i++;
       //Click book
       await page.waitFor(2000);
       await page.click(
         `#zg-ordered-list > li:nth-child(${i + 1}) > span > div > span > a`
       );
-      //Parse book
+      //parse book listing
       await page.waitFor(2000);
-      await parse(page, i);
+      await parser(page, i);
       page.goBack();
     }
   } catch (err) {

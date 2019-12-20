@@ -25,21 +25,18 @@ puppeteer.launch({ headless: false }).then(async browser => {
     await page.waitFor(2000);
     await page.click("#nav-subnav > a:nth-child(3)");
     //50
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= 1; i++) {
       //5th is the only child thats not a book listing
+
       if (i === 4) i++;
       //Click book
       await page.waitFor(2000);
       await page.click(
         `#zg-ordered-list > li:nth-child(${i + 1}) > span > div > span > a`
       );
-      let url = page.url();
       //Parse book
       await page.waitFor(2000);
-      const bodyHandle = await page.$("body");
-      const html = await page.evaluate(body => body.innerHTML, bodyHandle);
-      await parse(html, url);
-      await bodyHandle.dispose();
+      await parse(page, i);
       page.goBack();
     }
   } catch (err) {

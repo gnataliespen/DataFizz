@@ -1,18 +1,29 @@
 const cheerio = require("cheerio");
 
-const parse = (body, url) => {
-  console.log(url);
-  const $ = cheerio.load(body);
-  let name = $("#productTitle").text();
-  console.log(name);
-  let id = 1;
-  let listPrice = $(
+const Book = require("./BookSchema");
+
+const parse = async (page, id) => {
+  const sourceURL = page.url();
+  const bodyHandle = await page.$("body");
+  const html = await page.evaluate(body => body.innerHTML, bodyHandle);
+
+  //const frame = page.frames().find(frame => frame.name() === "iframe");
+  //const content = await frame.content();
+
+  //Intialize cherrio and bookobj
+  const $ = cheerio.load(html);
+  let bookObj = { id, sourceURL };
+
+  bookObj.name = $("#productTitle").text();
+
+  bookObj.listPrice = $(
     "#sims-fbt-form > div.sims-fbt-rows > fieldset > ul > li:nth-child(1) > span > span > div > label > span > div > span.a-color-price > span"
   )
     .text()
     .trim();
-  console.log(listPrice);
-  let product_details = $(
+
+  //Go through product details, find weight and dimensions
+  let productDetails = $(
     "li",
     "#productDetailsTable > tbody > tr > td > div > ul"
   ).filter((i, el) => {
@@ -25,25 +36,30 @@ const parse = (body, url) => {
         .includes("Shipping Weight")
     );
   });
-  let product_dimension = $(product_details[0])
+
+  //Remove label and extra spacing
+  bookObj.productDimensions = $(productDetails[0])
     .text()
     .split(":")[1]
     .trim();
 
-  console.log(product_dimension);
-  let weight = $(product_details[1])
+  //Remove label, extra shipping info, and extra spacing
+  bookObj.weight = $(productDetails[1])
     .text()
     .split(":")[1]
     .split("(")[0]
     .trim();
-
-  console.log(weight);
-
+  //let frame = await $("#bookDesc_iframe").contents();
+  //console.log(frame);
+  //Get each img from product img container and save src in arr
   let imgContainer = $("img", "#imgThumbs");
-  let imgURLS = [];
+  let imgURLs = [];
   for (let i = 0; i < imgContainer.length; i++) {
-    imgURLS.push(imgContainer[i].attribs.src);
+    imgURLs.push(imgContainer[i].attribs.src);
   }
-  console.log(imgURLS);
+  bookObj["imgURLs"] = imgURLs;
+
+  let nbook = new Book(bookObj);
+  await bodyHandle.dispose();
 };
 module.exports = parse;

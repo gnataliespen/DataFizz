@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 
-const parser = require("./parser");
+const Book = require("./BookSchema");
+const Page = require("./parser");
 // Launch Puppeteer and go to Amazons home page
 puppeteer.launch({ headless: false }).then(async browser => {
   // New Browser Tab and Amazon Web Page Navigation
@@ -35,7 +36,15 @@ puppeteer.launch({ headless: false }).then(async browser => {
       );
       //parse book listing
       await page.waitFor(2000);
-      await parser(page, i);
+      //Get page info
+      const bodyHandle = await page.$("body");
+      const html = await page.evaluate(body => body.innerHTML, bodyHandle);
+      //Create page instance
+      let newPage = new Page(page, i, html);
+      let data = await newPage.getPageData();
+
+      let book = new Book(data, newPage);
+      console.log("----------------------------------------");
       page.goBack();
     }
   } catch (err) {

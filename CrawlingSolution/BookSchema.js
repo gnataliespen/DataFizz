@@ -1,14 +1,15 @@
 const fs = require("fs");
 
 module.exports = class Book {
-  constructor(book) {
+  constructor(book, page) {
     if (Book.validate(book)) {
       for (let key in book) {
         this[key] = book[key];
       }
+      this.page = page;
       console.log("success");
     } else {
-      console.log("Incomplete record");
+      console.log("Incomplete record:");
       console.log(book);
     }
   }

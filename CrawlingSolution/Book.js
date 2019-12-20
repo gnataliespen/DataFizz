@@ -1,12 +1,9 @@
-const fs = require("fs");
-
 module.exports = class Book {
-  constructor(book, page) {
+  constructor(book) {
     if (Book.validate(book)) {
       for (let key in book) {
         this[key] = book[key];
       }
-      this.page = page;
       console.log("success");
     } else {
       console.log("Incomplete record:");
@@ -29,5 +26,8 @@ module.exports = class Book {
     } else {
       return true;
     }
+  }
+  stringify() {
+    return JSON.stringify(this);
   }
 };

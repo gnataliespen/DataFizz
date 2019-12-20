@@ -1,6 +1,6 @@
 const cheerio = require("cheerio");
 
-const Book = require("./BookSchema");
+const Book = require("./Book");
 
 /*Page class manages page, and stores parsed page data. 
 Each method returns information from the page, by first checking 

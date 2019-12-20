@@ -1,7 +1,9 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
 
-const Book = require("./BookSchema");
-const Page = require("./parser");
+const Book = require("./Book");
+const Page = require("./Page");
+
 // Launch Puppeteer and go to Amazons home page
 puppeteer.launch({ headless: false }).then(async browser => {
   // New Browser Tab and Amazon Web Page Navigation
@@ -25,27 +27,38 @@ puppeteer.launch({ headless: false }).then(async browser => {
     //Click New Releases
     await page.waitFor(2000);
     await page.click("#nav-subnav > a:nth-child(3)");
+
+    let booksParsed = [];
+
     //Go through first page of new releases and parse each book listing
     for (let i = 0; i <= 50; i++) {
       //5th is the only child thats not a book listing
       if (i === 4) i++;
+
       //Click book
       await page.waitFor(2000);
       await page.click(
         `#zg-ordered-list > li:nth-child(${i + 1}) > span > div > span > a`
       );
       await page.waitFor(2000);
+
       //Get page info
       const bodyHandle = await page.$("body");
       const html = await page.evaluate(body => body.innerHTML, bodyHandle);
+
       //Create page instance
       let newPage = new Page(page, i, html);
       let data = await newPage.getPageData();
       //Create book instance
-      let book = new Book(data, newPage);
-      console.log("----------------------------------------");
+      let book = new Book(data);
+
+      booksParsed.push(book.stringify());
+
       page.goBack();
     }
+    fs.writeFile("./books.json", JSON.stringify(booksParsed, null, 4), err =>
+      console.log(err)
+    );
   } catch (err) {
     console.log(err);
   }

@@ -4,7 +4,6 @@ module.exports = class Book {
       for (let key in book) {
         this[key] = book[key];
       }
-      console.log("success");
     } else {
       console.log("Incomplete record:");
       console.log(book);

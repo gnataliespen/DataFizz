@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-const Book = require("./Book");
+const Product = require("./Product");
 const Page = require("./Page");
 
 // Launch Puppeteer and go to Amazons home page
@@ -67,7 +67,7 @@ const Page = require("./Page");
       let newPage = new Page(page, i, html);
       let data = await newPage.getPageData();
       //Create book instance
-      let book = new Book(data);
+      let book = new Product(data);
 
       booksParsed.push(book.stringify());
     } catch (err) {

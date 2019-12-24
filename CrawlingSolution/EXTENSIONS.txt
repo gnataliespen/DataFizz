@@ -1,3 +1,8 @@
-Using this crawler on other sites would require a few tweaks, but overall the core structure will stay the same. The main thing that will need to be redone is the process in which puppeteer opens up a browser and navigates to a listing page. Currently, this is set up to work with the Amazon site structure, so you would want to change how the program reaches the listings page. Once you reach the listings page, the process of looping through the listings will remain mostly the same. The selectors will need to be adjusted and so will the page class methods that parse the product info, but other than that the existing class structure should work.
+Using this crawler on other sites would require a few tweaks, but overall the core structure will stay the same. The main thing that 
+will need to be redone is the process in which puppeteer opens up a browser and navigates to a listing page. Currently, this is set 
+up to work with the Amazon site structure, so you would want to change how the program reaches the listings page. Once you reach 
+the listings page, the process of looping through the listings will remain mostly the same. The selectors will need to be adjusted 
+and so will the page class methods that parse the product info, but other than that the existing class structure should work.
 
-For many other amazon products, you can use the crawler as is, as long as you fix the selectors, but some product listing pages are formatted differently so they would require some additional reformatting to the page parsing methods.
+For many other amazon products, you can use the crawler as is, as long as you fix the selectors, but some product listing pages 
+are formatted differently so they would require some additional tweaks to the page parsing methods.
